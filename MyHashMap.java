@@ -19,7 +19,6 @@ public class MyHashMap {
 	public void add(Student s){
 		//Variables
 		int HashValue = hashFunction(s);
-		
 		//Throw an Exception, if the student is already in the table
 		if (contains(s)) {
 			throw new RuntimeException();
