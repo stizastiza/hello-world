@@ -108,36 +108,57 @@ public class MyHashMap {
 	
 	/**
 	 * Returns true, if the hash table contains the given Student
+	 * IT SHOULD ALSO NOT BE ABLE TO FIND STUDENTS,
+	 * WHICH ARE PLACED WRONG
 	 */
 	public boolean contains(Student s){
 		//TODO: Your Code here.
 		int i = this.hashFunction(s);
-		while() {
+		while(i<=this.hashFunction(s)*2) {
 			if (this.array[i%this.array.length] != null) {
-			if (s.equals(array[i%this.array.length])) {
-				return true;
-			}
+				if (s.equals(array[i%this.array.length])) {
+					// check, if its an appropriate place for it:
+					if (isAppropriate(s)) {
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
 			}
 			i++;
 		}
 		return false;
 	}
+	public boolean isAppropriate(Student s) {
+		int Position = findPosition(s);
+		this.array[Position] = null;
+		this.add(s);
+		if (findPosition(s) == Position) {
+			return true;
+		}
+		else {
+			return false; 
+		}
+	}
 	
 	/**
 	 * @param h Hashvalue to search for
 	 * @return Number of Student in the hash table that have the hashvalue h
-	 * uneffizient, aber effektiv! Laueft den ganzen Array durch und vergleicht die HashValues
 	 */
 	
 	public int getNumberStudentsWithHashvalue(int h){
 		int n = 0;
-		for (int i = 0; i<array.length; i++) {
-			if (array[i] != null) {
-				if (h == hashFunction(array[i])) {
+		int i = h;
+		while (i<=h*2) {
+			if (this.array[i%this.array.length]!=null) {
+				if (this.hashFunction(this.array[i%this.array.length]) == h) {
 					n++;
 				}
 			}
+			i++;
 		}
+		
 		return n;
 	}
 	
