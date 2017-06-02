@@ -80,25 +80,28 @@ public class MyHashMap {
 			throw new RuntimeException();
 		}
 		int i = findPosition(s);
+		// delete my element. Create a null-space!
 		this.array[i] = null;
-		// (2)
-		for(; i+1<this.array.length; i++) {
-				if (array[i+1] != null)	{
-					if (hashFunction(this.array[i+1]) <= i) {
-						this.array[i] = this.array[i+1];
-						this.array[i+1] = null;
-					}
-				}
-				else if (this.array[i+1] == null) {
-					break;
-				}
+		// (2) run up to next null element
+		while (array[(i+1)%this.array.length] != null) {
+			//take next student and save it as s1 
+			Student s1 = array[(i+1)%this.array.length];
+			// no matter of what, delete it.
+			array[(i+1)%this.array.length] = null;
+			// correct working function 'add' will find an appropriate place: it will be the same or one higher
+			this.add(s1);
+			i++;
 		}
 	}
 	public int findPosition(Student s) {
-		for (int i = 0; i+1<this.array.length; i++) {
-			if (s == this.array[i]) {
-				return i;
+		int i = this.hashFunction(s);
+		while (i>=0) {
+			if (this.array[i%this.array.length] != null) {
+			if (s.equals(this.array[i%this.array.length])) {
+				return i%this.array.length;
 			}
+			}
+			i++;
 		}
 		return -1;
 	}
@@ -108,10 +111,14 @@ public class MyHashMap {
 	 */
 	public boolean contains(Student s){
 		//TODO: Your Code here.
-		for (int i = 0; i<array.length; i++) {
-			if (s.equals(array[i])) {
+		int i = this.hashFunction(s);
+		while() {
+			if (this.array[i%this.array.length] != null) {
+			if (s.equals(array[i%this.array.length])) {
 				return true;
 			}
+			}
+			i++;
 		}
 		return false;
 	}
