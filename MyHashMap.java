@@ -19,6 +19,7 @@ public class MyHashMap {
 	public void add(Student s){
 		//Variables
 		int HashValue = hashFunction(s);
+		int HashCopy = HashValue;
 		//Throw an Exception, if the student is already in the table
 		if (contains(s)) {
 			throw new RuntimeException();
@@ -32,7 +33,7 @@ public class MyHashMap {
 			boolean Switcher = true;
 			//Switcher switches to false, when a free place is found
 			while(Switcher) {
-				//it goes up to the length and checks every place
+				//it goes up to the length and checks every single place
 				if(HashValue+1<this.array.length) {
 					HashValue++;
 					if (this.array[HashValue] == null) {
@@ -40,9 +41,9 @@ public class MyHashMap {
 						Switcher = false;
 					}
 				}
-				//when length is reached, we start from 0 and go again
+				//when length is reached, we start from 0 and go again. but this time only up to old HashValue:=HashCopy
 				else {
-					for (int i = 0; i<this.array.length; i++) {
+					for (int i = 0; i<HashCopy; i++) {
 						if (this.array[i] == null) {
 							this.array[i] = s;
 							Switcher = false;
