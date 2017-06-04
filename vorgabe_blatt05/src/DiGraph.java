@@ -179,13 +179,33 @@ public class DiGraph implements Graph {
 	 * Traverses the Graph using breadth-first search
 	 * @param startNode the node to start the search with
 	 * @return a list containing the reachable nodes, ordered as visited during the search
+	 * HowTo:
+	 * (1) create another queue as a linked list to work BFS
+	 * (2)
+	 * 
 	 */
 	@Override
 	public List<Node> breadthFirstSearch(Node startNode){
 		LinkedList<Node> nodeList = null;
 		resetState();
 		// TODO
+		// (1)
+		LinkedList<Node> Queue = null;
+		// startNode should be contained in a list of the reachable nodes too
+		nodeList.add(startNode);
+		Node markNode = startNode;
+		List<Node> adjList = markNode.getAdjacentNodes();
+		for (Node workNode: adjList) {
+			enqueue(Queue, workNode);
+		}
 		return nodeList;
+	}
+	
+	public void enqueue(LinkedList<Node> Queue, Node x) {
+		
+	}
+	public void dequeue(LinkedList<Node> Queue, Node x) {
+		
 	}
 	
 	
