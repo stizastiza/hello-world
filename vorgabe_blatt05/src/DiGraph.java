@@ -181,31 +181,49 @@ public class DiGraph implements Graph {
 	 * @return a list containing the reachable nodes, ordered as visited during the search
 	 * HowTo:
 	 * (1) create another queue as a linked list to work BFS
-	 * (2)
+	 * (2) all of the nodes in the graph will be white
+	 * (3) 
 	 * 
 	 */
 	@Override
 	public List<Node> breadthFirstSearch(Node startNode){
 		LinkedList<Node> nodeList = null;
-		resetState();
+		resetState();	// all of the nodes in the graph will be white.
 		// TODO
 		// (1)
 		LinkedList<Node> Queue = null;
-		// startNode should be contained in a list of the reachable nodes too
-		nodeList.add(startNode);
-		Node markNode = startNode;
-		List<Node> adjList = markNode.getAdjacentNodes();
-		for (Node workNode: adjList) {
-			enqueue(Queue, workNode);
+		List<Node> allNodes = this.getNodes();
+		// adjList is a list of all neighbor nodes. I start with startNode.
+		List<Node> adjList = startNode.getAdjacentNodes();
+		allNodes.remove(startNode.id);
+		while (allNodes != null) {
+			// after start, second and all other runs:
+			if (Queue != null) {
+				for (Node n: Queue) {
+					nodeList.add(n);
+					adjList = n.getAdjacentNodes(); 
+					for (Node e: adjList) {
+						enqueue(Queue, e);
+					}
+					allNodes.remove(n.id);
+					dequeue(Queue, n);
+				}
+			}
+			// At start:
+			else {
+				for (Node e: adjList) {
+					enqueue(Queue, e);
+				}
+			}
 		}
 		return nodeList;
 	}
 	
 	public void enqueue(LinkedList<Node> Queue, Node x) {
-		
+		Queue.add(x);
 	}
 	public void dequeue(LinkedList<Node> Queue, Node x) {
-		
+		Queue.remove(x);
 	}
 	
 	
@@ -219,6 +237,7 @@ public class DiGraph implements Graph {
 		LinkedList<Node> nodeList = null;
 		resetState();
 		// TODO
+		
 		return nodeList;
 	}
 	
