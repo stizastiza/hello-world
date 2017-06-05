@@ -201,7 +201,7 @@ public class DiGraph implements Graph {
 			}
 		}
 		// when Queue will be empty, that will mean, that all reachable elements were reached
-		while (Queue != null) {
+		while (!Queue.isEmpty()) {
 				for (Node n: Queue) {
 					nodeList.add(n);
 					adjList = n.getAdjacentNodes(); 
@@ -235,16 +235,23 @@ public class DiGraph implements Graph {
 		LinkedList<Node> nodeList = new LinkedList<Node>();
 		resetState();
 		// TODO
-		LinkedList<Node> Stack = new LinkedList<Node>();
+		//LinkedList<Node> Stack = new LinkedList<Node>();
 		List<Node> adjList = startNode.getAdjacentNodes();
 		for (Node e: adjList) {
-			recursiveFunction(e);
+			nodeList.add(e);
+			recursiveFunction(e, nodeList);
 		}
 		return nodeList;
 	}
 	
-	public void recursiveFunction(Node e) {
-		
+	public void recursiveFunction (Node e, LinkedList<Node> nodeList) {
+		List<Node> adjList = e.getAdjacentNodes();
+		if (!adjList.isEmpty()) {
+			for (Node r: adjList) {
+				nodeList.add(r);
+				recursiveFunction(r, nodeList);
+			}
+		}
 	}
 	/**
 	 *  YOUR IMPLEMENTATION SHOULD END HERE
