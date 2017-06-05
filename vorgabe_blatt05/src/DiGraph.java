@@ -187,34 +187,32 @@ public class DiGraph implements Graph {
 	 */
 	@Override
 	public List<Node> breadthFirstSearch(Node startNode){
-		LinkedList<Node> nodeList = null;
+		LinkedList<Node> nodeList = new LinkedList<Node>();
 		resetState();	// all of the nodes in the graph will be white.
 		// TODO
 		// (1)
-		LinkedList<Node> Queue = null;
-		List<Node> allNodes = this.getNodes();
+		LinkedList<Node> Queue = new LinkedList<Node>();
 		// adjList is a list of all neighbor nodes. I start with startNode.
 		List<Node> adjList = startNode.getAdjacentNodes();
-		allNodes.remove(startNode.id);
-		while (allNodes != null) {
-			// after start, second and all other runs:
-			if (Queue != null) {
+		// i add first children of startNode to Queue and it is not empty anymore!
+		for (Node e: adjList) {
+			if (adjList != null) {
+				enqueue(Queue, e);
+			}
+		}
+		// when Queue will be empty, that will mean, that all reachable elements were reached
+		while (Queue != null) {
 				for (Node n: Queue) {
 					nodeList.add(n);
 					adjList = n.getAdjacentNodes(); 
 					for (Node e: adjList) {
-						enqueue(Queue, e);
+						if (adjList != null) {
+							enqueue(Queue, e);
+						}
 					}
-					allNodes.remove(n.id);
+					// sometime allNodes will be empty and it will stop
 					dequeue(Queue, n);
 				}
-			}
-			// At start:
-			else {
-				for (Node e: adjList) {
-					enqueue(Queue, e);
-				}
-			}
 		}
 		return nodeList;
 	}
@@ -234,13 +232,20 @@ public class DiGraph implements Graph {
 	 */
 	@Override
 	public List<Node> depthFirstSearch(Node startNode){
-		LinkedList<Node> nodeList = null;
+		LinkedList<Node> nodeList = new LinkedList<Node>();
 		resetState();
 		// TODO
-		
+		LinkedList<Node> Stack = new LinkedList<Node>();
+		List<Node> adjList = startNode.getAdjacentNodes();
+		for (Node e: adjList) {
+			recursiveFunction(e);
+		}
 		return nodeList;
 	}
 	
+	public void recursiveFunction(Node e) {
+		
+	}
 	/**
 	 *  YOUR IMPLEMENTATION SHOULD END HERE
 	 */
