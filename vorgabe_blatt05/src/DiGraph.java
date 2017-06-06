@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Stack;
+import java.util.Queue;
 
 
 /**
@@ -179,51 +181,56 @@ public class DiGraph implements Graph {
 	 * Traverses the Graph using breadth-first search
 	 * @param startNode the node to start the search with
 	 * @return a list containing the reachable nodes, ordered as visited during the search
-	 * HowTo:
-	 * (1) create another queue as a linked list to work BFS
-	 * (2) all of the nodes in the graph will be white
-	 * (3) 
 	 * 
 	 */
 	@Override
 	public List<Node> breadthFirstSearch(Node startNode){
 		LinkedList<Node> nodeList = new LinkedList<Node>();
-		resetState();	// all of the nodes in the graph will be white.
+		resetState();	// all of the nodes in the graph will be white.But i don`t use it.
+		List<Node> Graph = this.getNodes();
 		// TODO
+		// FIRSTOFALL
+		if (startNode == null || !Graph.contains(startNode)) {
+			return null;
+		}
 		// (1)
-		LinkedList<Node> Queue = new LinkedList<Node>();
+		LinkedList <Node> Queue = new LinkedList<Node>();
+		nodeList.add(startNode);
 		// adjList is a list of all neighbor nodes. I start with startNode.
 		List<Node> adjList = startNode.getAdjacentNodes();
 		// i add first children of startNode to Queue and it is not empty anymore!
 		for (Node e: adjList) {
 			if (adjList != null) {
-				enqueue(Queue, e);
+				Queue.add(e);
+			}
+			else if (adjList == null) {
+				return nodeList;
 			}
 		}
 		// when Queue will be empty, that will mean, that all reachable elements were reached
 		while (!Queue.isEmpty()) {
-				for (Node n: Queue) {
+			// i need a copy cause other case i get Concurrent stuff exception
+			// reason: i tried to change Queue, but Queue was a part of my loop-condition
+			LinkedList <Node> Copy = new LinkedList<Node>();
+			Copy.addAll(Queue);
+				for (Node n: Copy) {
+					if (!nodeList.contains(n)) {
 					nodeList.add(n);
 					adjList = n.getAdjacentNodes(); 
 					for (Node e: adjList) {
-						if (adjList != null) {
-							enqueue(Queue, e);
+						if (!Queue.contains(e) && !nodeList.contains(e)) {
+							if (adjList != null) {
+								Queue.add(e);
+							}
 						}
 					}
 					// sometime allNodes will be empty and it will stop
-					dequeue(Queue, n);
+					Queue.remove(n);
+				}	
 				}
 		}
 		return nodeList;
 	}
-	
-	public void enqueue(LinkedList<Node> Queue, Node x) {
-		Queue.add(x);
-	}
-	public void dequeue(LinkedList<Node> Queue, Node x) {
-		Queue.remove(x);
-	}
-	
 	
 	/**
 	 * Traverses the Graph using depth-first search
@@ -234,12 +241,23 @@ public class DiGraph implements Graph {
 	public List<Node> depthFirstSearch(Node startNode){
 		LinkedList<Node> nodeList = new LinkedList<Node>();
 		resetState();
+		List<Node> Graph = this.getNodes();
 		// TODO
-		//LinkedList<Node> Stack = new LinkedList<Node>();
+		//LinkedList<Node> Stack = new LinkedList<Node>(); hab ich irgendwie nicht gebraucht
+		// Again: first of all:
+		if (startNode == null || !Graph.contains(startNode)) {
+			return null;
+		}
+		nodeList.add(startNode);
 		List<Node> adjList = startNode.getAdjacentNodes();
 		for (Node e: adjList) {
-			nodeList.add(e);
-			recursiveFunction(e, nodeList);
+			if (adjList != null) {
+				nodeList.add(e);
+				recursiveFunction(e, nodeList);
+			}
+			else if (adjList == null) {
+				return nodeList;
+			}
 		}
 		return nodeList;
 	}
@@ -248,8 +266,10 @@ public class DiGraph implements Graph {
 		List<Node> adjList = e.getAdjacentNodes();
 		if (!adjList.isEmpty()) {
 			for (Node r: adjList) {
-				nodeList.add(r);
-				recursiveFunction(r, nodeList);
+				if (!nodeList.contains(r)) {
+					nodeList.add(r);
+					recursiveFunction(r, nodeList);
+				}
 			}
 		}
 	}
