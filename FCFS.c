@@ -7,13 +7,16 @@ void schedule_FCFS(const TaskPool *task_pool) {
 
     while (!allDone(task_pool)) {
         //Here: select a task for execution, based on his arrival time
-        for (int i = 0; i<task_pool->size; i++) {
-            CPU = task_pool->task[i];
+        int i = 0;
+        CPU = checkArrivals(task_pool, i);
+        while (!isDone(CPU)) {
+            //wait simulation
         }
         if (execTask(CPU, 1) < 0) {
             printf("%sERROR:%s No Task selected to be executed.\n", COLOR_RED, COLOR_RESET);
             break;
         }
+        i++;
     }
     printf("\n");
 
