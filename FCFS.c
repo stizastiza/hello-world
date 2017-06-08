@@ -7,12 +7,10 @@ void schedule_FCFS(const TaskPool *task_pool) {
     int curr = 0;
     while (!allDone(task_pool)) {
         //Here: select a task for execution, based on his arrival time
-        for (int i = 0; i < task_pool->size; i++) {
-            if (!isDone(checkArrivals(task_pool, i))) {
+        for (int i = 0; i < task_pool->total_duration; i++) {
+            if (!isDone(checkArrivals(task_pool, i)) && checkArrivals(task_pool, i) != NULL) {
                 curr = i;
-                if (checkArrivals(task_pool, curr) != NULL) {
-                    break;
-                }
+                break;
             }
         }
         CPU = checkArrivals(task_pool, curr);
