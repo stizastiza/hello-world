@@ -7,45 +7,30 @@
 // be compiled with two extra files (cmake)
 typedef struct Node
 {
-    void *data;
+    int data;
     struct Node *next;
 }node;
 
 typedef struct QueueList
 {
     int sizeOfQueue;
-    size_t memSize;
     node *head;
     node *tail;
 }Queue;
 
-void queueInit(Queue *q, size_t memSize)
+void queueInit(Queue *q)
 {
     q->sizeOfQueue = 0;
-    q->memSize = memSize;
-    q->head = q->tail = NULL;
+    q->head = NULL;
+    q->tail = NULL;
 }
 
-int enqueue(Queue *q, const void *data)
+int enqueue(Queue *q, int k)
 {
     node *newNode = (node *)malloc(sizeof(node));
 
-    if(newNode == NULL)
-    {
-        return -1;
-    }
-
-    newNode->data = malloc(q->memSize);
-
-    if(newNode->data == NULL)
-    {
-        free(newNode);
-        return -1;
-    }
-
     newNode->next = NULL;
-
-    memcpy(newNode->data, data, q->memSize);
+    newNode->data = k;
 
     if(q->sizeOfQueue == 0)
     {
@@ -61,12 +46,12 @@ int enqueue(Queue *q, const void *data)
     return 0;
 }
 
-void dequeue(Queue *q, void *data)
+void dequeue(Queue *q, int k)
 {
     if(q->sizeOfQueue > 0)
     {
         node *temp = q->head;
-        memcpy(data, temp->data, q->memSize);
+        k = temp->data;
 
         if(q->sizeOfQueue > 1)
         {
@@ -79,20 +64,9 @@ void dequeue(Queue *q, void *data)
         }
 
         q->sizeOfQueue--;
-        free(temp->data);
         free(temp);
     }
 }
-
-void queuePeek(Queue *q, void *data)
-{
-    if(q->sizeOfQueue > 0)
-    {
-        node *temp = q->head;
-        memcpy(data, temp->data, q->memSize);
-    }
-}
-
 void clearQueue(Queue *q)
 {
     node *temp;
@@ -101,19 +75,13 @@ void clearQueue(Queue *q)
     {
         temp = q->head;
         q->head = temp->next;
-        free(temp->data);
         free(temp);
         q->sizeOfQueue--;
     }
 
     q->head = q->tail = NULL;
 }
-
-int getQueueSize(Queue *q)
-{
-    return q->sizeOfQueue;
-}
-int queueContains(Queue *q, void *data)
+int queueContains(Queue *q, int data)
 {
     node *temp = q->head;
     while (temp != NULL) {
@@ -137,42 +105,44 @@ void schedule_RR(const TaskPool *task_pool, uint16_t quantum_max) {
     // TODO
     Task *CPU = NULL;
     //initialisation and allocation of my request Queue:
-    Queue reqQueue;
-    queueInit(&reqQueue, sizeof(task_pool->task));
+    Queue* reqQueue = (Queue*) malloc(sizeof(Queue));
+    queueInit(reqQueue);
     // counter for loading:
     int counter = 0;
-
+    int time;
     while (!allDone(task_pool)) {
         // load tasks into Queue:
         for (int i = counter; i >= 0; i--) {
-            if (!isDone(checkArrivals(task_pool, i)) && checkArrivals(task_pool, i) != NULL && queueContains(&reqQueue, checkArrivals(task_pool, i)) == 0) {
-                enqueue(&reqQueue, checkArrivals(task_pool, i));
+            if (!isDone(checkArrivals(task_pool, i)) && checkArrivals(task_pool, i) != NULL && queueContains(reqQueue, i) == 0) {
+                enqueue(reqQueue, i);
             }
         }
         // CPU peeks process from Queue and dequeues head at the same time:
-        dequeue(&reqQueue, CPU);
+        dequeue(reqQueue, time);
+        CPU = checkArrivals(task_pool, time);
 
         // execution:
         if (CPU->exec_ticks >= quantum_max) {
+            CPU->exec_ticks = CPU->exec_ticks - quantum_max;
             for (int k = 0; k < quantum_max; k++) {
+                counter++;
                 if (execTask(CPU, 1) < 0) {
                     printf("%sERROR:%s No Task selected to be executed.\n", COLOR_RED, COLOR_RESET);
                     break;
                 }
-                counter++;
             }
         }
         else {
             for (int k = 0; k < CPU->exec_ticks; k++) {
+                counter++;
                 if (execTask(CPU, 1) < 0) {
                     printf("%sERROR:%s No Task selected to be executed.\n", COLOR_RED, COLOR_RESET);
                     break;
                 }
-                counter++;
             }
         }
     }
-    clearQueue(&reqQueue);
+    clearQueue(reqQueue);
     printf("\n");
     return;
 }
