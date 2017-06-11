@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
-//first of all: Queue. We had to copy it here, because it doesn`t let it
-// be compiled with two extra files (cmake)
+//first of all: Queue. We puted it here to make sure everyone of us can compile it without changing CMakeLists.txt
+// Wrote by us. 
 typedef struct Node
 {
     int data;
@@ -24,7 +24,11 @@ void queueInit(Queue *q)
     q->head = NULL;
     q->tail = NULL;
 }
-
+int queuePeek(Queue *q) {
+    if (q->sizeOfQueue>0) {
+        return q->head->data;
+    }
+}
 int enqueue(Queue *q, int k)
 {
     node *newNode = (node *)malloc(sizeof(node));
@@ -46,13 +50,12 @@ int enqueue(Queue *q, int k)
     return 0;
 }
 
-void dequeue(Queue *q, int k)
+int dequeue(Queue *q)
 {
     if(q->sizeOfQueue > 0)
     {
         node *temp = q->head;
-        k = temp->data;
-
+        int var = temp->data;
         if(q->sizeOfQueue > 1)
         {
             q->head = q->head->next;
@@ -62,9 +65,9 @@ void dequeue(Queue *q, int k)
             q->head = NULL;
             q->tail = NULL;
         }
-
         q->sizeOfQueue--;
         free(temp);
+        return var;
     }
 }
 void clearQueue(Queue *q)
@@ -94,52 +97,39 @@ int queueContains(Queue *q, int data)
 }
 
 
-
-/*
- * Idea:
- * counter counts common time to work with arrivals,
- * queue reqQueue is filled with tasks ordered by their arrival time
- * 
- */
 void schedule_RR(const TaskPool *task_pool, uint16_t quantum_max) {
     // TODO
     Task *CPU = NULL;
+
     //initialisation and allocation of my request Queue:
     Queue* reqQueue = (Queue*) malloc(sizeof(Queue));
     queueInit(reqQueue);
+
     // counter for loading:
     int counter = 0;
+    int lastCount = 0;
     int time;
+    enqueue(reqQueue, 0);
+
     while (!allDone(task_pool)) {
-        // load tasks into Queue:
-        for (int i = counter; i >= 0; i--) {
-            if (!isDone(checkArrivals(task_pool, i)) && checkArrivals(task_pool, i) != NULL && queueContains(reqQueue, i) == 0) {
+        time = dequeue(reqQueue);
+        CPU = checkArrivals(task_pool, time);
+        if (execTask(CPU, quantum_max) < 0) {
+            printf("%sERROR:%s No Task selected to be executed.\n", COLOR_RED, COLOR_RESET);
+            break;
+        }
+        counter = counter + quantum_max;
+        //first work done. Now i go check for new arrivals into my reqQueue:
+        for (int i = lastCount+1; i<=counter; i++) {
+            Task *NewArrival = checkArrivals(task_pool, i);
+            if (NewArrival != NULL) {
                 enqueue(reqQueue, i);
             }
         }
-        // CPU peeks process from Queue and dequeues head at the same time:
-        dequeue(reqQueue, time);
-        CPU = checkArrivals(task_pool, time);
-
-        // execution:
-        if (CPU->exec_ticks >= quantum_max) {
-            CPU->exec_ticks = CPU->exec_ticks - quantum_max;
-            for (int k = 0; k < quantum_max; k++) {
-                counter++;
-                if (execTask(CPU, 1) < 0) {
-                    printf("%sERROR:%s No Task selected to be executed.\n", COLOR_RED, COLOR_RESET);
-                    break;
-                }
-            }
-        }
-        else {
-            for (int k = 0; k < CPU->exec_ticks; k++) {
-                counter++;
-                if (execTask(CPU, 1) < 0) {
-                    printf("%sERROR:%s No Task selected to be executed.\n", COLOR_RED, COLOR_RESET);
-                    break;
-                }
-            }
+        lastCount = counter;
+        // and of course add not finished tasks:
+       if (CPU->exec_ticks < CPU->total_ticks) {
+            enqueue(reqQueue, time);
         }
     }
     clearQueue(reqQueue);
