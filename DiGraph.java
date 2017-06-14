@@ -493,11 +493,30 @@ public class DiGraph implements Graph {
 		
 		this.resetState();
 		// TODO: Your populateBellmanFordFrom implementation here
+		
 		startNode.distance = 0.0;
-		this.stopExecutionUntilSignal();
-		LinkedList<Edge> Edges = startNode.edges;
+		//this.stopExecutionUntilSignal();
 		
-		
+		// iterate it for n-1 times, where n is a count of edges
+		for (int i = 0; i<this.getEdges().size()-1; i++) {
+			for (Node e: this.getNodes()) {
+				// work only with reachable nodes:
+				if (e.distance != null) {
+					//this.stopExecutionUntilSignal();
+					e.status = 1;
+					List<Node> AdjList = e.getAdjacentNodes();
+					for (Node a: AdjList) {
+						//this.stopExecutionUntilSignal();
+						double AdjDistance = e.distance + e.getWeight(a);
+						if (a.distance == null || a.distance > AdjDistance) {
+							a.distance = AdjDistance;
+							a.predecessor = e;
+						}
+					}
+					e.status = 2;
+				}
+			}
+		}
 		// clean up
 		this.clearMarks();
 
@@ -520,15 +539,33 @@ public class DiGraph implements Graph {
 	@Override
 	public List<Node> getShortestPathBellmanFord(Node startNode, Node targetNode) {
 		// TODO: Your implementation here
-		// NOTE: you have to run populateBellmanFordFrom first before you can read
-		// out the shortest path
-
-		//This line stops program execution until a key is pressed
-		stopExecutionUntilSignal();
-
-		//Return an empty list. Replace this line by the shortest path!
-		LinkedList<Node> l = new LinkedList<Node>();
-		return l;
+				List<Node> Graph = this.getNodes();
+				if (startNode == null || targetNode == null || !Graph.contains(startNode) || !Graph.contains(targetNode)) {
+					return null;
+				}
+				// NOTE: you have to run populateBellmanFordFrom first before you can read
+				// out the shortest path:
+				populateBellmanFordFrom(startNode);
+				
+				//This line stops program execution until a key is pressed
+				//stopExecutionUntilSignal();
+				//Return an empty list. Replace this line by the shortest path!
+				LinkedList<Node> l = new LinkedList<Node>();
+				LinkedList<Node> lOver = new LinkedList<Node>();
+				Node temp = targetNode.predecessor;
+				lOver.add(targetNode);
+				while(temp != startNode) {
+					lOver.add(temp);
+					temp = temp.predecessor;
+				}
+				lOver.add(temp);
+				// iterate lOver to fill l in reverse order:
+				while (lOver.peekLast() != null) {
+					Node key = lOver.peekLast();
+					l.add(key);
+					lOver.removeLast();
+				}
+				return l;
 	}
 
 
