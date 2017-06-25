@@ -1,6 +1,12 @@
 import java.io.IOException;
 
 import org.junit.Test;
+
+import work.Edge;
+import work.Graph;
+import work.GraphIO;
+import work.Node;
+
 import org.junit.Assert;
 
 public class GraphTest {
@@ -11,15 +17,24 @@ public class GraphTest {
 		Graph g1;
 		try {
 			g1 = GraphIO.loadGraph("tests/testgraphen/test_kruskal01.txt");
-
+			g1.showGraph(g1.getNodes().get(0).getID());
 			// get mst
 			Graph mst = g1.toMinSpanTree();
+			int edgeCountOfG1 = 0;
+			for (Node n : g1.getNodes()) {
+				for (Edge e : n.getIncidentEdges()) {
+					edgeCountOfG1++;
+				}
+			}
+			System.out.println("g1 count of nodes = " + g1.getNodes().size() + " mst count of nodes = " + mst.getNodes().size());
 			int edgeCount = 0;
 			for (Node n : mst.getNodes()) {
 				for (Edge e : n.getIncidentEdges()) {
 					edgeCount++;
 				}
 			}
+			System.out.println("g1 count of edges = " + edgeCountOfG1 + " mst count of edges = " + edgeCount);
+			
 			Assert.assertEquals(
 					"Tree does not have the correct number of edges. Watch out for backward edges!",
 					12, edgeCount);

@@ -1,4 +1,7 @@
 import org.junit.Test;
+
+import work.UnionFindSet;
+
 import org.junit.Assert;
 
 public class UnionFindTest {
