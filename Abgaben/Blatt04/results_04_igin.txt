@@ -1,0 +1,36 @@
+igin,  03.06.2017, 08:11:23
+Korrektur Blatt 4
+
+Aufgabe 2.1
+	Add element twice: 3/3
+	Add elements until the hashtable is full: 3/3
+	Complex Add. Check if the elements are in the correct position: 10/10
+	Simple add. Add one element and check if the element is contained in the hash table: 4/4
+Total points for Aufgabe 2.1: 20/20
+
+Aufgabe 2.2
+	contains(): complex case I (depends on testContainsImplementation) check whether linear probing has been taking into account: 5/5
+	contains(): basic case: 5/5
+	contains(): Correct implementation (depends on testContains) looking for element in wrong position - should never be found: 5/5
+	contains(): complex case II (depends on testContainsImplementation) check the special border case (rewinding).: 5/5
+Total points for Aufgabe 2.2: 20/20
+
+Aufgabe 2.3
+	Complex remove. Check if the remove algorithm can handle the special border case (rewinding).: 15/15
+	Simple remove. Simply check whether the element has been removed regardless of the position: 5/5
+	Removing an element twice. Expecting and exception: 5/5
+	Removing an element that does not exist in the hasthable: 5/5
+Total points for Aufgabe 2.3: 30/30
+
+Aufgabe 2.4
+	getNumberStudentWithHashvalue(): basic case: 5/5
+	getNumberStudentWithHashvalue(): basic case, efficiency: 5/5
+Total points for Aufgabe 2.4: 10/10
+
+Aufgabe 2.5
+	resize(): Test the size of the new hashtable: 5/5
+	resize(): Test if the hashtable has gotten bigger, and the elements have been copied to the new positions: 5/5
+	resize(): Test if the elements are in their correct positions: 10/10
+Total points for Aufgabe 2.5: 20/20
+
+Total points: 100/100

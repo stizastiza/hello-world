@@ -1,0 +1,21 @@
+igin,  28.06.2017, 16:09:50
+Korrektur Blatt 8
+
+Aufgabe 2.1
+	Test for add with one element: 8/8
+	Test for add with one element, String type: 8/8
+	Test for add with list of elements: 8/8
+	Test for union with two elements: 8/8
+	Test for union with more elements 1: 4/4
+	Test for union with more elements 2 : 4/4
+Total points for Aufgabe 2.1: 40/40
+
+Aufgabe 2.2
+	Test connectivity: 10/10
+	test if MST has right number of edges: 10/10
+	test if MST has right number of nodes: 10/10
+	Test correct total weight of MST: 15/15
+	Test correct total weight of MST for harder problem: 15/15
+Total points for Aufgabe 2.2: 60/60
+
+Total points: 100/100

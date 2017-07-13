@@ -1,0 +1,37 @@
+igin,  24.05.2017, 17:14:45
+Korrektur Blatt 3
+
+Aufgabe 1.1
+	Test Pair: constructor and getFirst: 1/1
+	Test Pair: constructor and setFirst: 1/1
+	Test Pair: constructor, getter and setter: 3/3
+	Test Pair.swap: 10/10
+	Test Pair.toString() yields correct output: 5/5
+Total points for Aufgabe 1.1: 20/20
+
+Aufgabe 2.1
+	Test FastaParser.readSequences() yields correct output for complex FASTA files: 0/15
+	  java.lang.AssertionError: Doesn't handle format correctly. expected:<true> but was:<false>
+	Test FastaParser.readSequences() for Exception in case of missing identifier: 0/5
+	  java.lang.AssertionError: expected:<Expected identifier> but was:<null>
+	Test FastaParser.readSequences() for Exception in case of missing identifier (empty file): 0/5
+	  java.lang.AssertionError: expected:<false> but was:<true>
+	Test FastaParser.readSequences() for Exception in case of missing sequence: 0/10
+	  java.lang.AssertionError: expected:<Expected sequence on line 2> but was:<null>
+	Test FastaParser.readSequences() yields correct output for simple FASTA file: 0/5
+	  java.lang.AssertionError: expected:<true> but was:<false>
+	Test FastaParser.handleException() yields correct output: 0/10
+	  java.lang.Error: Unresolved compilation problems: 
+	Unhandled exception type FastaException
+	Unhandled exception type IOException
+
+Total points for Aufgabe 2.1: 0/50
+
+Aufgabe 3.4
+	Test SteelFactory.addWorker(): 8/8
+	Test SteelFactory.compareTo(): 12/12
+	Test SteelFactory.getName(): 5/5
+	Test SteelFactory.getWorkerCount(): 5/5
+Total points for Aufgabe 3.4: 30/30
+
+Total points: 50/100
