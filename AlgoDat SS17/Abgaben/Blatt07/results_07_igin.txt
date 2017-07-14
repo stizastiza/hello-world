@@ -1,0 +1,26 @@
+igin,  22.06.2017, 08:15:23
+Korrektur Blatt 7
+
+Aufgabe 3.1
+	Test if findAugmentingPath connects s and t: 5/5
+	Test if findAugmentingPath finds path with residual capacity: 4/4
+	Test findAugmentingPath complex: 4/4
+	Test findAugmentedPath easy: 5/5
+	Test findAugmentingPath medium: 4/4
+	Test findMinCapacity easy: 5/5
+	Test findMinCapacity medium: 5/5
+	Test findMinimumCapacity: 5/5
+	Test findMinimumCapacity on empty path: 5/5
+	Test FordFulkerson hard: 10/10
+	Test FordFulkerson simple: 10/10
+	Test updateResidualCapacity easy: 8/8
+	Test updateResidualCapacity medium: 8/8
+	Test updateResidualCapacity Backwards: 7/7
+	Test updateResidualCapacity Forwards: 7/7
+	Test if findAugmentingPath handles disconnected graphs: 0/4
+	  java.lang.AssertionError: findAugmentingPath returned non-empty path for diconnected graph. found: null
+	Test if findAugmentingPath handles graphs with no resiual capacity left: 0/4
+	  java.lang.AssertionError: findAugmentingPath returned non-empty path for graph without residual capacity. found: null
+Total points for Aufgabe 3.1: 92/100
+
+Total points: 92/100
